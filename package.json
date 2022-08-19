@@ -1,0 +1,19 @@
+{
+  "name": "api-rest-js",
+  "version": "1.0.0",
+  "description": "Creación de un sitio web de movies donde se consuma la api de The Movie DB",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fernando-Ibarra/api-rest-JS.git"
+  },
+  "author": "Fernando Ibarra",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Fernando-Ibarra/api-rest-JS/issues"
+  },
+  "homepage": "https://github.com/Fernando-Ibarra/api-rest-JS#readme"
+}

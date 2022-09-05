@@ -12,6 +12,7 @@ async function getTrendingMoviesPreview() {
     const { data } = await api('trending/movie/week');
     const movies = data.results;
 
+    // delete de preview list
     trendingMoviesPreviewList.innerHTML = "";
     movies.forEach(movie => {
         const movieContainer = document.createElement('div');
@@ -31,6 +32,7 @@ async function getCategoriesPreview() {
     const { data } = await api('genre/movie/list');
     const categories = data.genres;
 
+    // delete de preview list
     categoriesPreviewList.innerHTML = "";
 
     categories.forEach(category => {
@@ -39,6 +41,10 @@ async function getCategoriesPreview() {
 
         const categoryTittle = document.createElement('h3');
         categoryTittle.classList.add('category-title');
+        // Add event for changing the location 
+        categoryTittle.addEventListener('click', () => {
+            location.hash = `#category=${category.id}-${category.name}`;
+        });
         categoryTittle.setAttribute('id', 'id' + category.id);
 
         const categoryTitleText = document.createTextNode(category.name) 
@@ -46,5 +52,29 @@ async function getCategoriesPreview() {
         categoryTittle.appendChild(categoryTitleText);
         categoryContainer.appendChild(categoryTittle);
         categoriesPreviewList.appendChild(categoryContainer);
+    });
+}
+
+async function getMovieByCategory(id) {
+    const { data } = await api('/discover/movie',{
+        params: {
+            with_genres: id,
+        }
+    });
+    const movies = data.results;
+
+    // delete de preview list
+    genericSection.innerHTML = "";
+    movies.forEach(movie => {
+        const movieContainer = document.createElement('div');
+        movieContainer.classList.add('movie-container');
+
+        const movieImg = document.createElement('img');
+        movieImg.classList.add('movie-img');
+        movieImg.setAttribute('alt', movie.title);
+        movieImg.setAttribute('src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path);
+
+        movieContainer.appendChild(movieImg);
+        genericSection.appendChild(movieContainer);
     });
 }

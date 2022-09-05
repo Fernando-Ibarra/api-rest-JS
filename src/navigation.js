@@ -1,3 +1,4 @@
+// Events for changing the location
 searchFormBtn.addEventListener('click', () => {
     location.hash = '#search='
 });
@@ -9,6 +10,7 @@ trendingBtn.addEventListener('click', () => {
 arrowBtn.addEventListener('click', () => {
     location.hash = '#home'
 });
+
 
 window.addEventListener('DOMContentLoaded', navigator, false);
 window.addEventListener('hashchange', navigator, false);
@@ -65,6 +67,19 @@ function categoriesPage() {
     categoriesPreviewSection.classList.add('inactive');
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
+
+    const [_, categoryData] = location.hash.split('=');
+    const [categoryId, categoryName] = categoryData.split('-');
+
+    if (categoryName != "TV%20Movie") {
+        nameCategory = categoryName
+    } else {
+        nameCategory = "TV Movie"
+    }
+    
+    headerCategoryTitle.innerHTML = nameCategory;
+
+    getMovieByCategory(categoryId);
 }
 
 function movieDetailsPage() {

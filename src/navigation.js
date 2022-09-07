@@ -1,6 +1,6 @@
 // Events for changing the location
 searchFormBtn.addEventListener('click', () => {
-    location.hash = '#search='
+    location.hash = '#search=' + searchFormInput.value;
 });
 
 trendingBtn.addEventListener('click', () => {
@@ -30,7 +30,9 @@ function navigator() {
         homePage();
     }
 
-    location.hash
+    location.hash;
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
 }
 
 function homePage() {
@@ -68,13 +70,16 @@ function categoriesPage() {
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
 
+    // ['#category','id-name']
     const [_, categoryData] = location.hash.split('=');
     const [categoryId, categoryName] = categoryData.split('-');
 
-    if (categoryName != "TV%20Movie") {
-        nameCategory = categoryName
+    if (categoryName != "TV%20Movie" && categoryName != "Science%20Fiction" ) {
+        nameCategory = categoryName;
+    } else if (categoryName == "Science%20Fiction") {
+        nameCategory = "Science Fiction";
     } else {
-        nameCategory = "TV Movie"
+        nameCategory = "TV Movie";
     }
     
     headerCategoryTitle.innerHTML = nameCategory;
@@ -107,13 +112,17 @@ function searchPage() {
     arrowBtn.classList.remove('inactive');
     arrowBtn.classList.remove('header-arrow--white');
     headerTitle.classList.add('inactive')
-    headerCategoryTitle.classList.remove('inactive');
+    headerCategoryTitle.classList.add('inactive');
     searchForm.classList.remove('inactive')
 
     trendingPreviewSection.classList.add('inactive');
     categoriesPreviewSection.classList.add('inactive');
     genericSection.classList.remove('inactive');
     movieDetailSection.classList.add('inactive');
+
+    // ['#search','elementobuscado']
+    const [_, query] = location.hash.split('=');
+    getMovieBySearch(query);
 }
 
 function trendsPage() {

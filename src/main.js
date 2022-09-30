@@ -12,6 +12,7 @@ const api = axios.create({
 function createMovies(movies, container) {
     // delete de preview list
     container.innerHTML = "";
+
     // Generate list of movies
     movies.forEach(movie => {
         const movieContainer = document.createElement('div');
@@ -53,6 +54,23 @@ function createCategories(categories, container) {
         categoryContainer.appendChild(categoryTittle);
         container.appendChild(categoryContainer);
     });
+}
+
+function createProviders(providers, container) {
+    // delete de preview list
+    container.innerHTML = "";
+
+    providers.forEach(provider => {
+        const providerContainer = document.createElement('div');
+        providerContainer.classList.add('provider-container');
+
+        const providerImg = document.createElement('img');
+        providerImg.classList.add('provider-img');
+        providerImg.setAttribute('src', 'https://www.themoviedb.org/t/p/original/' + provider.logo_path);
+
+        providerContainer.appendChild(providerImg);
+        container.appendChild(providerContainer)
+    }); 
 }
 
 // Llamados a la API
@@ -108,7 +126,7 @@ async function getMovieById(id) {
 
     movieDetailTitle.textContent = movie.title;
     movieDetailDescription.textContent = movie.overview;
-    movieDetailScore.textContent = movie.vote_average;
+    movieDetailScore.textContent = Math.round(movie.vote_average);
 
     createCategories(movie.genres, movieDetailCategoriesList);
 
@@ -120,4 +138,11 @@ async function getRelatedMoviesId(id) {
     const relatedMovies = data.results;
 
     createMovies(relatedMovies, relatedMoviesContainer);
+}
+
+async function getWatchProviders(id) {
+    const { data } = await api(`movie/${id}/watch/providers`);
+    const providers = data.results;
+
+    createProviders(providers.GT.flatrate, movieListProviders);
 }

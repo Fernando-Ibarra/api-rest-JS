@@ -107,6 +107,7 @@ function movieDetailsPage() {
     // ['#movie','id']
     const [_, id] = location.hash.split('=');
     getMovieById(id);
+    getWatchProviders(id);
 }
 
 function searchPage() {

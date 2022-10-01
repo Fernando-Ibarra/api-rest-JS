@@ -66,11 +66,33 @@ function createProviders(providers, container) {
 
         const providerImg = document.createElement('img');
         providerImg.classList.add('provider-img');
-        providerImg.setAttribute('src', 'https://www.themoviedb.org/t/p/original/' + provider.logo_path);
+        providerImg.setAttribute('src', 'https://www.themoviedb.org/t/p/original/' + provider.logo_path); 
 
-        providerContainer.appendChild(providerImg);
+        const Name = document.createElement('p');
+        Name.classList.add('provider-Name');
+        const providerName = document.createTextNode(provider.provider_name) 
+
+        Name.appendChild(providerName)
+        providerContainer.appendChild(Name)
+        providerContainer.appendChild(providerImg)
         container.appendChild(providerContainer)
     }); 
+}
+
+function createProvidersError(container) {
+    // delete de preview list
+    container.innerHTML = "";
+
+    const providerContainer = document.createElement('div');
+    providerContainer.classList.add('provider-container');
+
+    const Name = document.createElement('p');
+    Name.classList.add('provider-Name');
+    const providerName = document.createTextNode("No disponible aún en tu país");
+
+    Name.appendChild(providerName);
+    providerContainer.appendChild(Name);
+    container.appendChild(providerContainer);
 }
 
 // Llamados a la API
@@ -142,7 +164,12 @@ async function getRelatedMoviesId(id) {
 
 async function getWatchProviders(id) {
     const { data } = await api(`movie/${id}/watch/providers`);
-    const providers = data.results;
+    const providers = data.results; 
 
-    createProviders(providers.GT.flatrate, movieListProviders);
+    if (Object.keys(providers).includes("GT")) {
+        createProviders(providers.GT.flatrate, movieListProviders);
+    } else {
+        createProvidersError(movieListProviders)
+        console.log(providers)
+    }
 }

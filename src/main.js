@@ -9,7 +9,25 @@ const api = axios.create({
 });
 
 // Utils
-function createMovies(movies, container) {
+const options = {
+    // root
+    rootMargin: '0px',
+    threshold: 0
+}
+
+const callback = (entries) => {
+    entries.forEach((entry) => {
+        //console.log({entry});
+        if (entry.isIntersecting) { 
+            const url = entry.target.getAttribute('data-img');
+            entry.target.setAttribute('src', url);
+        }
+    });
+};
+
+const observer = new IntersectionObserver(callback, options);
+
+function createMovies(movies, container, lazyLoad = false) {
     // delete de preview list
     container.innerHTML = "";
 
@@ -24,7 +42,11 @@ function createMovies(movies, container) {
         const movieImg = document.createElement('img');
         movieImg.classList.add('movie-img');
         movieImg.setAttribute('alt', movie.title);
-        movieImg.setAttribute('src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path);
+        movieImg.setAttribute(lazyLoad ? 'data-img' : 'src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path);
+
+        if (lazyLoad) {
+            observer.observe(movieImg);
+        }
 
         movieContainer.appendChild(movieImg);
         container.appendChild(movieContainer);
@@ -101,7 +123,7 @@ async function getTrendingMoviesPreview() {
     const { data } = await api('trending/movie/week');
     const movies = data.results;
 
-    createMovies(movies, trendingMoviesPreviewList);
+    createMovies(movies, trendingMoviesPreviewList, true);
 }
 
 async function getCategoriesPreview() {
@@ -119,7 +141,7 @@ async function getMovieByCategory(id) {
     });
     const movies = data.results;
 
-    createMovies(movies, genericSection);
+    createMovies(movies, genericSection, true);
 }
 
 async function getMovieBySearch(query) {
@@ -130,14 +152,14 @@ async function getMovieBySearch(query) {
     });
     const movies = data.results;
 
-    createMovies(movies, genericSection);
+    createMovies(movies, genericSection, true);
 }
 
 async function getTrendingMovies() {
     const { data } = await api('trending/movie/week');
     const movies = data.results;
 
-    createMovies(movies, genericSection);
+    createMovies(movies, genericSection, true);
 }
 
 async function getMovieById(id) {
@@ -150,7 +172,7 @@ async function getMovieById(id) {
     movieDetailDescription.textContent = movie.overview;
     movieDetailScore.textContent = Math.round(movie.vote_average);
 
-    createCategories(movie.genres, movieDetailCategoriesList);
+    createCategories(movie.genres, movieDetailCategoriesList, true);
 
     getRelatedMoviesId(id)
 }
@@ -159,7 +181,7 @@ async function getRelatedMoviesId(id) {
     const { data } = await api(`movie/${id}/recommendations`);
     const relatedMovies = data.results;
 
-    createMovies(relatedMovies, relatedMoviesContainer);
+    createMovies(relatedMovies, relatedMoviesContainer, true);
 }
 
 async function getWatchProviders(id) {

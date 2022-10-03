@@ -128,6 +128,11 @@ button {
 
 .movie-img {
   border-radius: 8px;
+  height: 275px;
+  min-height: 275px;
+  max-height: 275px;
+  min-width: 100%;
+  max-width: 100%;
 }
 
 .categoriesPreview-list, .categories-list {
@@ -327,11 +332,6 @@ button {
 
 .genericList-container .movie-img {
   width: 100%;
-  height: 275px;
-  min-height: 275px;
-  max-height: 275px;
-  min-width: 100%;
-  max-width: 100%;
 }
 
 
@@ -384,7 +384,7 @@ button {
   overflow-y: hidden;
   white-space: nowrap;
   width: calc(100vw - 24px);
-  padding-bottom: 16px;
+  /* padding-bottom: 16px; */
 }
 
 .relatedMovies-scrollContainer .movie-container {

@@ -17,10 +17,10 @@ const options = {
 
 const callback = (entries) => {
     entries.forEach((entry) => {
-        //console.log({entry});
         if (entry.isIntersecting) { 
+            console.log(entry);
             const url = entry.target.getAttribute('data-img');
-            entry.target.setAttribute('src', url);
+            entry.target.setAttribute('src', url);  
         }
     });
 };
@@ -43,7 +43,9 @@ function createMovies(movies, container, lazyLoad = false) {
         movieImg.classList.add('movie-img');
         movieImg.setAttribute('alt', movie.title);
         movieImg.setAttribute(lazyLoad ? 'data-img' : 'src', 'https://image.tmdb.org/t/p/w300/' + movie.poster_path);
-
+        movieImg.addEventListener('error', () => {
+            movieImg.setAttribute('src', "https://media.istockphoto.com/vectors/error-page-not-found-vertical-banner-or-website-with-system-fatal-vector-id1254267333?k=20&m=1254267333&s=170667a&w=0&h=lyVbMipyYbIMF77szTSO4GQQQ4VuG977vjdsGspDr0k=");
+        });
         if (lazyLoad) {
             observer.observe(movieImg);
         }

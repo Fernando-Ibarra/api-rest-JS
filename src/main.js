@@ -38,9 +38,6 @@ function createMovies(movies, container, {lazyLoad = false, clean = false}) {
     movies.forEach(movie => {
         const movieContainer = document.createElement('div');
         movieContainer.classList.add('movie-container');
-        movieContainer.addEventListener('click', () => {
-             location.hash = '#movie=' + movie.id;
-        });
 
         const movieImg = document.createElement('img');
         movieImg.classList.add('movie-img');
@@ -49,11 +46,23 @@ function createMovies(movies, container, {lazyLoad = false, clean = false}) {
         movieImg.addEventListener('error', () => {
             movieImg.setAttribute('src', "https://media.istockphoto.com/vectors/error-page-not-found-vertical-banner-or-website-with-system-fatal-vector-id1254267333?k=20&m=1254267333&s=170667a&w=0&h=lyVbMipyYbIMF77szTSO4GQQQ4VuG977vjdsGspDr0k=");
         });
+        movieImg.addEventListener('click', () => {
+            location.hash = '#movie=' + movie.id;
+       });
+        const movieBtn = document.createElement('button');
+        movieBtn.classList.add('movie-btn');
+        movieBtn.addEventListener('click', () => {
+            movieBtn.classList.toggle('movie-btn--liked')
+            // debemos agregar la pelicula a localStorage
+
+        })
+
         if (lazyLoad) {
             observer.observe(movieImg);
         }
 
         movieContainer.appendChild(movieImg);
+        movieContainer.appendChild(movieBtn);
         container.appendChild(movieContainer);
     });
 }

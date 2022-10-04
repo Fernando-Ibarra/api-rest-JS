@@ -145,8 +145,33 @@ async function getMovieByCategory(id) {
         }
     });
     const movies = data.results;
+    maxPage =  data.total_pages;
+    console.log(maxPage);
 
     createMovies(movies, genericSection, {lazyLoad: true, clean: true});
+}
+
+function getPaginatedMoviesByCategory(id) {
+    return async function () {
+        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+        const scrollIsBottom = (scrollTop + clientHeight) >= (scrollHeight - 15);
+    
+        const pageIsNotMax = page < maxPage;
+    
+    
+        if (scrollIsBottom && pageIsNotMax) {
+            page++;
+            const { data } = await api('discover/movie',{
+                params: {
+                    with_genres: id,
+                    page,
+                }
+            });
+            const movies = data.results;
+        
+            createMovies(movies, genericSection, {lazyLoad: true, clean: false});
+        }
+    }
 }
 
 async function getMovieBySearch(query) {
@@ -156,8 +181,33 @@ async function getMovieBySearch(query) {
         }
     });
     const movies = data.results;
+    maxPage =  data.total_pages;
+    console.log(maxPage);
 
     createMovies(movies, genericSection, {lazyLoad: true, clean: true});
+}
+
+function getPaginatedMoviesBySearch(query) {
+    return async function () {
+        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+        const scrollIsBottom = (scrollTop + clientHeight) >= (scrollHeight - 15);
+    
+        const pageIsNotMax = page < maxPage;
+    
+    
+        if (scrollIsBottom && pageIsNotMax) {
+            page++;
+            const { data } = await api('search/movie',{
+                params: {
+                    query: query,
+                    page,
+                }
+            });
+            const movies = data.results;
+        
+            createMovies(movies, genericSection, {lazyLoad: true, clean: false});
+        }
+    }
 }
 
 async function getTrendingMovies() {
@@ -166,10 +216,6 @@ async function getTrendingMovies() {
     maxPage =  data.total_pages;
 
     createMovies(movies, genericSection, {lazyLoad: true, clean: true});
-    // const btnLoadMore = document.createElement('button');
-    // btnLoadMore.innerText = 'Cargas más';
-    // btnLoadMore.addEventListener('click', getPaginatedTrendingMovies)
-    // genericSection.appendChild(btnLoadMore)
 }
 
 async function getPaginatedTrendingMovies() {
@@ -190,11 +236,6 @@ async function getPaginatedTrendingMovies() {
     
         createMovies(movies, genericSection, {lazyLoad: true, clean: false});
     }
-
-    // const btnLoadMore = document.createElement('button');
-    // btnLoadMore.innerText = 'Cargas más';
-    // btnLoadMore.addEventListener('click', getPaginatedTrendingMovies)
-    // genericSection.appendChild(btnLoadMore)
 }
 
 async function getMovieById(id) {

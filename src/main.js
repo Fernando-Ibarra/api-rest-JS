@@ -1,3 +1,4 @@
+// Data
 const api = axios.create({
     baseURL: 'https://api.themoviedb.org/3/',
     headers: {
@@ -5,8 +6,35 @@ const api = axios.create({
     },
     params: {
         'api_key': API_KEY,
+        'language': navigator.language,
     },
 });
+
+function likedMovieList() {
+    const item = JSON.parse(localStorage.getItem('liked_movies'));
+    let movies;
+
+    if (item) {
+        movies = item;
+    } else {
+        movies = {};
+    }
+
+    return movies;
+}
+
+function likeMovie(movie) {
+
+    const likedMovies = likedMovieList();
+
+    if (likedMovies[movie.id]) {
+        likedMovies[movie.id] = undefined;
+    } else {
+        likedMovies[movie.id] = movie;
+    }
+
+    localStorage.setItem('liked_movies', JSON.stringify(likedMovies));
+}
 
 // Utils
 const options = {
@@ -51,10 +79,11 @@ function createMovies(movies, container, {lazyLoad = false, clean = false}) {
        });
         const movieBtn = document.createElement('button');
         movieBtn.classList.add('movie-btn');
+        likedMovieList()[movie.id] && movieBtn.classList.toggle('movie-btn--liked')
         movieBtn.addEventListener('click', () => {
             movieBtn.classList.toggle('movie-btn--liked')
-            // debemos agregar la pelicula a localStorage
-
+            likeMovie(movie);
+            getLikedMovie()
         })
 
         if (lazyLoad) {
@@ -279,4 +308,11 @@ async function getWatchProviders(id) {
         createProvidersError(movieListProviders)
         console.log(providers)
     }
+}
+
+function getLikedMovie() {
+    const likedMovies = likedMovieList();
+    const moviesArray = Object.values(likedMovies);
+
+    createMovies(moviesArray, likedMoviesListArticle, {lazyLoad: true, clean: true});
 }
